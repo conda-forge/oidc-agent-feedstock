@@ -1,5 +1,5 @@
 {% set name = "oidc-agent" %}
-{% set version = "4.4.0" %}
+{% set version = "4.5.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/indigo-dc/oidc-agent/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: c8c2cb6c70e4e74a2be452d6238171947fab2da7920308f11c9bbe39669f4850
+  sha256: 02a71e8ad3ba58870429b271f9632ffdfcd570586213ddfb014c12733be3559e
   patches:
     - 0001-Disable-oidc-prompt.patch
     - 0002-Fix-macos-build.patch
@@ -52,7 +52,7 @@ about:
   home: https://indigo-dc.gitbook.io/oidc-agent/
   license: MIT
   license_file: LICENSE
-  summary: 'Tools to manage OpenID Connect tokens from the command line'
+  summary: Tools to manage OpenID Connect tokens from the command line
   doc_url: https://indigo-dc.gitbook.io/oidc-agent/
   dev_url: https://github.com/indigo-dc/oidc-agent/
 
