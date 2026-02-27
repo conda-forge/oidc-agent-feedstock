@@ -17,17 +17,17 @@ source:
 
 build:
   skip: true  # [win]
-  number: 0
+  number: 1
 
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - make
     - pkg-config
     - sed
     - help2man
-    - sysroot_linux-64 2.17  # [linux64]
   host:
     - libsodium
     - libcurl
