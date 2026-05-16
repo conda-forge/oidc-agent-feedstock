@@ -25,7 +25,7 @@ libmicrohttpd:
 libsecret:
 - '0.21'
 libsodium:
-- 1.0.21
+- 1.0.22
 target_platform:
 - linux-ppc64le
 zip_keys:
