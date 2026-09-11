@@ -1,0 +1,75 @@
+schema_version: 1
+
+context:
+  version: "5.3.8"
+
+package:
+  name: oidc-agent
+  version: ${{ version }}
+
+source:
+  url: https://github.com/indigo-dc/oidc-agent/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 96d35f2abe3ccbdce8d1a8b4bb1dcb381c0d6c0ee8a51d4ee3d918323b5b4ef7
+  patches:
+    - 0001-Disable-oidc-prompt.patch
+
+build:
+  number: 0
+  # Upstream only builds the CLI tools on Windows against the MSYS2 POSIX
+  # runtime and recommends WSL instead, where the linux-64 package works.
+  skip:
+    - win
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
+    - make
+    - pkg-config
+    - sed
+    - help2man
+  host:
+    - libsodium
+    - libcurl
+    - libmicrohttpd
+    - libqrencode
+    - if: osx
+      then: argp-standalone
+  run:
+    # used by oidc-agent-service
+    - jq
+
+tests:
+  - package_contents:
+      bin:
+        - oidc-agent
+        - oidc-agent-service
+        - oidc-add
+        - oidc-gen
+        - oidc-keychain
+        - oidc-token
+        - oidc-tokensh
+  - script:
+      - oidc-agent --version
+      - oidc-gen --help
+      - oidc-add --help
+      - oidc-token --help
+      - if: linux
+        then: test -f "${PREFIX}/lib/liboidc-agent.so.5"
+      - if: osx
+        then: test -f "${PREFIX}/lib/liboidc-agent.5.dylib"
+      # oidc-agent-service must start the oidc-agent of this environment
+      - grep -qF 'OIDC_AGENT="${OIDC_AGENT:-'"${PREFIX}"'/bin/oidc-agent}"' "${PREFIX}/bin/oidc-agent-service"
+      - unset OIDC_AGENT && export TMPDIR="$(mktemp -d /tmp/oidc.XXXXXX)" && eval "$(oidc-agent-service start)" && oidc-agent --status && oidc-agent-service stop
+
+about:
+  homepage: https://indigo-dc.github.io/oidc-agent/
+  repository: https://github.com/indigo-dc/oidc-agent
+  documentation: https://indigo-dc.github.io/oidc-agent/
+  license: MIT
+  license_file: LICENSE
+  summary: Tools to manage OpenID Connect tokens from the command line
+
+extra:
+  recipe-maintainers:
+    - chrisburr

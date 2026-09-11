@@ -1,58 +1,43 @@
-From 09a596e6ff95e5903d2512e62640a1629a8e05b9 Mon Sep 17 00:00:00 2001
-From: Chris Burr <christopher.burr@cern.ch>
-Date: Thu, 17 Nov 2022 15:22:55 +0100
-Subject: [PATCH] Disable oidc-prompt
-
----
- Makefile | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Do not build or install oidc-prompt: it needs gtk+-3.0 and webkit2gtk, which
+are not available. The CLI tools work without it.
 
 diff --git a/Makefile b/Makefile
-index dc8f76d3..a0e4f29c 100644
+index 66b90de..d328487 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -393,12 +393,12 @@ mhtest:
- 
- .PHONY: build
- ifdef MSYS
--build: $(BINDIR)/$(AGENT) $(BINDIR)/$(GEN) $(BINDIR)/$(ADD) $(BINDIR)/$(CLIENT) $(BINDIR)/$(PROMPT)
-+build: $(BINDIR)/$(AGENT) $(BINDIR)/$(GEN) $(BINDIR)/$(ADD) $(BINDIR)/$(CLIENT)
- else
+@@ -448,7 +448,7 @@ else
  ifdef MINGW
  build: shared_lib $(APILIB)/liboidc-agent.a
  else
--build: $(BINDIR)/$(AGENT) $(BINDIR)/$(GEN) $(BINDIR)/$(ADD) $(BINDIR)/$(CLIENT) $(BINDIR)/$(AGENT_SERVICE) $(BINDIR)/$(KEYCHAIN) $(BINDIR)/$(PROMPT)
-+build: $(BINDIR)/$(AGENT) $(BINDIR)/$(GEN) $(BINDIR)/$(ADD) $(BINDIR)/$(CLIENT) $(BINDIR)/$(AGENT_SERVICE) $(BINDIR)/$(KEYCHAIN)
+-build: $(BINDIR)/$(AGENT) $(BINDIR)/$(GEN) $(BINDIR)/$(ADD) $(BINDIR)/$(CLIENT) $(BINDIR)/$(AGENT_SERVICE) $(BINDIR)/$(KEYCHAIN) $(BINDIR)/$(TOKENSH) $(BINDIR)/$(PROMPT)
++build: $(BINDIR)/$(AGENT) $(BINDIR)/$(GEN) $(BINDIR)/$(ADD) $(BINDIR)/$(CLIENT) $(BINDIR)/$(AGENT_SERVICE) $(BINDIR)/$(KEYCHAIN) $(BINDIR)/$(TOKENSH)
  endif
  endif
  
-@@ -510,7 +510,7 @@ endif
+@@ -572,7 +572,7 @@ endif
  
  ifndef ANY_MSYS
  .PHONY: install_bin
--install_bin: $(BIN_PATH)/bin/$(AGENT) $(BIN_PATH)/bin/$(GEN) $(BIN_PATH)/bin/$(ADD) $(BIN_PATH)/bin/$(CLIENT) $(BIN_PATH)/bin/$(KEYCHAIN) $(BIN_PATH)/bin/$(AGENT_SERVICE) $(PROMPT_BIN_PATH)/bin/$(PROMPT)
-+install_bin: $(BIN_PATH)/bin/$(AGENT) $(BIN_PATH)/bin/$(GEN) $(BIN_PATH)/bin/$(ADD) $(BIN_PATH)/bin/$(CLIENT) $(BIN_PATH)/bin/$(KEYCHAIN) $(BIN_PATH)/bin/$(AGENT_SERVICE)
+-install_bin: $(BIN_PATH)/bin/$(AGENT) $(BIN_PATH)/bin/$(GEN) $(BIN_PATH)/bin/$(ADD) $(BIN_PATH)/bin/$(CLIENT) $(BIN_PATH)/bin/$(KEYCHAIN) $(BIN_PATH)/bin/$(TOKENSH) $(BIN_PATH)/bin/$(AGENT_SERVICE) $(PROMPT_BIN_PATH)/bin/$(PROMPT)
++install_bin: $(BIN_PATH)/bin/$(AGENT) $(BIN_PATH)/bin/$(GEN) $(BIN_PATH)/bin/$(ADD) $(BIN_PATH)/bin/$(CLIENT) $(BIN_PATH)/bin/$(KEYCHAIN) $(BIN_PATH)/bin/$(TOKENSH) $(BIN_PATH)/bin/$(AGENT_SERVICE)
  	@echo "Installed binaries"
  
  .PHONY: install_conf
-@@ -522,7 +522,7 @@ install_bash: $(BASH_COMPLETION_PATH)/$(AGENT) $(BASH_COMPLETION_PATH)/$(GEN) $(
+@@ -584,7 +584,7 @@ install_bash: $(BASH_COMPLETION_PATH)/$(AGENT) $(BASH_COMPLETION_PATH)/$(GEN) $(
  	@echo "Installed bash completion"
  
  .PHONY: install_man
--install_man: $(MAN_PATH)/man1/$(AGENT).1 $(MAN_PATH)/man1/$(GEN).1 $(MAN_PATH)/man1/$(ADD).1 $(MAN_PATH)/man1/$(CLIENT).1 $(MAN_PATH)/man1/$(AGENT_SERVICE).1 $(MAN_PATH)/man1/$(KEYCHAIN).1 $(PROMPT_MAN_PATH)/man1/$(PROMPT).1
-+install_man: $(MAN_PATH)/man1/$(AGENT).1 $(MAN_PATH)/man1/$(GEN).1 $(MAN_PATH)/man1/$(ADD).1 $(MAN_PATH)/man1/$(CLIENT).1 $(MAN_PATH)/man1/$(AGENT_SERVICE).1 $(MAN_PATH)/man1/$(KEYCHAIN).1
+-install_man: $(MAN_PATH)/man1/$(AGENT).1 $(MAN_PATH)/man1/$(GEN).1 $(MAN_PATH)/man1/$(ADD).1 $(MAN_PATH)/man1/$(CLIENT).1 $(MAN_PATH)/man1/$(AGENT_SERVICE).1 $(MAN_PATH)/man1/$(KEYCHAIN).1 $(PROMPT_MAN_PATH)/man1/$(PROMPT).1 $(MAN_PATH)/man1/$(TOKENSH).1
++install_man: $(MAN_PATH)/man1/$(AGENT).1 $(MAN_PATH)/man1/$(GEN).1 $(MAN_PATH)/man1/$(ADD).1 $(MAN_PATH)/man1/$(CLIENT).1 $(MAN_PATH)/man1/$(AGENT_SERVICE).1 $(MAN_PATH)/man1/$(KEYCHAIN).1 $(MAN_PATH)/man1/$(TOKENSH).1
  	@echo "Installed man pages!"
  
  .PHONY: install_lib
-@@ -798,7 +798,7 @@ uninstall_xsession_script:
+@@ -881,7 +881,7 @@ uninstall_xsession_script:
  # Man pages
  
  .PHONY: create_man
--create_man: $(MANDIR)/$(AGENT).1 $(MANDIR)/$(GEN).1 $(MANDIR)/$(ADD).1  $(MANDIR)/$(CLIENT).1 $(MANDIR)/$(AGENT_SERVICE).1 $(MANDIR)/$(KEYCHAIN).1 $(MANDIR)/$(PROMPT).1
-+create_man: $(MANDIR)/$(AGENT).1 $(MANDIR)/$(GEN).1 $(MANDIR)/$(ADD).1  $(MANDIR)/$(CLIENT).1 $(MANDIR)/$(AGENT_SERVICE).1 $(MANDIR)/$(KEYCHAIN).1
+-create_man: $(MANDIR)/$(AGENT).1 $(MANDIR)/$(GEN).1 $(MANDIR)/$(ADD).1  $(MANDIR)/$(CLIENT).1 $(MANDIR)/$(AGENT_SERVICE).1 $(MANDIR)/$(KEYCHAIN).1 $(MANDIR)/$(PROMPT).1 $(MANDIR)/$(TOKENSH).1
++create_man: $(MANDIR)/$(AGENT).1 $(MANDIR)/$(GEN).1 $(MANDIR)/$(ADD).1  $(MANDIR)/$(CLIENT).1 $(MANDIR)/$(AGENT_SERVICE).1 $(MANDIR)/$(KEYCHAIN).1 $(MANDIR)/$(TOKENSH).1
  	@echo "Created man pages"
  
  $(MANDIR)/$(AGENT).1: $(MANDIR) $(BINDIR)/$(AGENT) $(SRCDIR)/h2m/$(AGENT).h2m
--- 
-2.38.1
-
